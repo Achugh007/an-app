@@ -1,0 +1,7 @@
+steps:
+- name: 'hashicorp/terraform:light'
+  args: ['init']
+- name: 'hashicorp/terraform:light'
+  args: ['apply', '-auto-approve', '-var-file=terraform.tfvars']
+  env:
+  - 'TF_VAR_environment_name=$BRANCH_NAME'  
