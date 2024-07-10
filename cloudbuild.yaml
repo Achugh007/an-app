@@ -1,10 +1,19 @@
 # cloudbuild.yaml
 steps:
 
-# Check out code from the repository to Cloud Build's workspace (using the 'an-app' repository)
+# Clone your repository (replace with your actual repository URL)
 - name: 'gcr.io/cloud-builders/git'
-  args: ['fetch', 'feature-new'] # Fetch the 'feature-new' branch
+  args: ['clone', 'https://github.com/Achugh007/an-app.git'] 
 
+# Fetch the specific feature branch
+- name: 'gcr.io/cloud-builders/git'
+  args: ['fetch', 'origin', 'feature-new'] 
+  
+# Checkout the feature-new branch
+- name: 'gcr.io/cloud-builders/git'
+  args: ['checkout', 'feature-new']
+
+# Terraform Init
 - name: 'hashicorp/terraform:light'
   id: 'terraform-init'
   dir: 'terraform'  # Navigate to the terraform directory
@@ -16,6 +25,7 @@ steps:
         -backend-config="bucket=sks-terraform" \
         -backend-config="prefix=terraform/state/${BRANCH_NAME}"
 
+# Terraform Plan
 - name: 'hashicorp/terraform:light'
   id: 'terraform-plan'
   dir: 'terraform'  # Navigate to the terraform directory
@@ -27,6 +37,7 @@ steps:
         -var="environment_name=${BRANCH_NAME#feature-}" \
         -out=tfplan
 
+# Terraform Apply
 - name: 'hashicorp/terraform:light'
   id: 'terraform-apply'
   dir: 'terraform'  # Navigate to the terraform directory
