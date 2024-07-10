@@ -8,7 +8,7 @@ steps:
 # Fetch the specific feature branch
 - name: 'gcr.io/cloud-builders/git'
   args: ['fetch', 'origin', 'feature-new'] 
-
+  
 # Checkout the feature-new branch
 - name: 'gcr.io/cloud-builders/git'
   args: ['checkout', 'feature-new']
@@ -34,7 +34,6 @@ steps:
     - '-c'
     - |
       terraform plan \
-        -var="region=us-east1" \  # Specify the desired region
         -var="environment_name=${BRANCH_NAME#feature-}" \
         -out=tfplan
 
