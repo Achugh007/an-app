@@ -1,29 +1,37 @@
 # cloudbuild.yaml
 steps:
+
+# Check out code from the repository to Cloud Build's workspace 
+- name: 'gcr.io/cloud-builders/git'
+  args: ['fetch', 'feature-new']
+
 - name: 'hashicorp/terraform:light'
   id: 'terraform-init'
+  dir: 'terraform'  # Navigate to the terraform directory
   entrypoint: 'sh'
   args:
-  - '-c'
-  - |
-    terraform init \
-    -backend-config="bucket=sks-terraform" \
-    -backend-config="prefix=terraform/state/${BRANCH_NAME}"
+    - '-c'
+    - |
+      terraform init \
+        -backend-config="bucket=sks-terraform" \
+        -backend-config="prefix=terraform/state/${BRANCH_NAME}"
 
 - name: 'hashicorp/terraform:light'
   id: 'terraform-plan'
+  dir: 'terraform'  # Navigate to the terraform directory
   entrypoint: 'sh'
   args:
-  - '-c'
-  - |
-    terraform plan \
-    -var="environment_name=${BRANCH_NAME#feature-}" \
-    -out=tfplan
+    - '-c'
+    - |
+      terraform plan \
+        -var="environment_name=${BRANCH_NAME#feature-}" \
+        -out=tfplan
 
 - name: 'hashicorp/terraform:light'
   id: 'terraform-apply'
+  dir: 'terraform'  # Navigate to the terraform directory
   entrypoint: 'sh'
   args:
-  - '-c'
-  - |
-    terraform apply -auto-approve tfplan
+    - '-c'
+    - |
+      terraform apply -auto-approve tfplan
