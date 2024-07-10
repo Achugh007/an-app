@@ -1,9 +1,9 @@
 # cloudbuild.yaml
 steps:
 
-# Check out code from the repository to Cloud Build's workspace 
+# Check out code from the repository to Cloud Build's workspace (using the 'an-app' repository)
 - name: 'gcr.io/cloud-builders/git'
-  args: ['fetch', 'feature-new']
+  args: ['fetch', 'feature-new'] # Fetch the 'feature-new' branch
 
 - name: 'hashicorp/terraform:light'
   id: 'terraform-init'
