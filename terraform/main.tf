@@ -19,7 +19,8 @@ variable "environment_name" {
 }
 
 resource "google_container_cluster" "primary" {
-  name               = "cluster-${lower(replace(var.environment_name, "/[^a-z0-9-]/", ""))}"  # Sanitize cluster name
+  # Construct a valid cluster name using the environment variable and the fixed prefix "sks-cluster-"
+  name               = "sks-cluster-${lower(replace(var.environment_name, "/[^a-z0-9-]/", ""))}"
   location           = var.region
   initial_node_count = 1
   remove_default_node_pool = true
