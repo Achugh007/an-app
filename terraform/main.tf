@@ -19,7 +19,7 @@ variable "environment_name" {
 }
 
 resource "google_container_cluster" "primary" {
-  name               = "${var.environment_name}-cluster"
+  name               = "cluster-${lower(replace(var.environment_name, "/[^a-z0-9-]/", ""))}"  # Sanitize cluster name
   location           = var.region
   initial_node_count = 1
   remove_default_node_pool = true
