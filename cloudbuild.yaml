@@ -1,0 +1,29 @@
+# cloudbuild.yaml
+steps:
+- name: 'hashicorp/terraform:light'
+  id: 'terraform-init'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+    terraform init \
+    -backend-config="bucket=sks-terraform" \
+    -backend-config="prefix=terraform/state/${BRANCH_NAME}"
+
+- name: 'hashicorp/terraform:light'
+  id: 'terraform-plan'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+    terraform plan \
+    -var="environment_name=${BRANCH_NAME#feature-}" \
+    -out=tfplan
+
+- name: 'hashicorp/terraform:light'
+  id: 'terraform-apply'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+    terraform apply -auto-approve tfplan
