@@ -1,0 +1,13 @@
+steps:
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - functions
+      - deploy
+      - serverless
+      - '--runtime'
+      - nodejs14
+      - '--trigger-http'
+      - '--entry-point'
+      - helloWorld
+options:
+  logging: CLOUD_LOGGING_ONLY
